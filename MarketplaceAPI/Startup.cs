@@ -36,6 +36,8 @@ namespace MarketplaceAPI
             services.AddDbContext<MarketplaceContext>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

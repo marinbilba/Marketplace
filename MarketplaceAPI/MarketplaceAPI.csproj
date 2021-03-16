@@ -27,6 +27,9 @@
       <Compile Update="Services\ProductService.cs">
         <DependentUpon>IProductService.cs</DependentUpon>
       </Compile>
+      <Compile Update="Services\CustomerService.cs">
+        <DependentUpon>ICustomerService.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

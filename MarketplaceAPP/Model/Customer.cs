@@ -5,6 +5,12 @@ namespace MarketplaceAPP.Model
 {
     public class Customer
     {
+        public Customer(string username, string password)
+        {
+            Username = username;
+            Password = password;
+        }
+
         [Key]
         [JsonPropertyName("username")]
 

@@ -23,10 +23,13 @@ namespace MarketplaceAPP.Model
         public string ThumbnailUrl { get; set; }
         [JsonPropertyName("stock")]
 
-        public int Stock { get; set; } 
-        [JsonPropertyName("category")]
+        public int Stock { get; set; }
 
-        public Category Category { get; set; } 
+        [JsonPropertyName("category")]
+       public Category Category { get; set; } 
+       [JsonPropertyName("categoryId")]
+       public int CategoryId { get; set; } 
+       
         
         // public virtual ICollection<OrderLine> OrderLines { get; set; }
     }

@@ -1,4 +1,8 @@
 ﻿@using MarketplaceAPP.Model
+@using MarketplaceAPP.Data
+@using MarketplaceAPP.Authentication
+@inject IMarketplaceService MarketplaceService;
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <link rel="stylesheet" type="text/css" href="css/Components/productCard.css">
 
   <div class="col-md-4">
@@ -8,7 +12,7 @@
                         <div class="col-md-8"> <a href="#" class="title" data-abc="true"></a>@Product.Name</div>
                     </div>
                 </figcaption>
-                <div class="bottom-wrap"> <a href="#" class="btn btn-primary float-right" data-abc="true"> Add to cart</a>
+                <div class="bottom-wrap"> <a @onclick="(() => AddToCart(Product))"href="#" class="btn btn-primary float-right" data-abc="true"> Add to cart</a>
                     <div class="price-wrap"> <span class="price h5">@Product.Price</span> <br> <small class="text-success">Free shipping</small> </div>
                 </div>
             </figure>
@@ -19,8 +23,11 @@
     [Parameter]
     public Product Product { get; set; }
     
+    private Customer _currentUser;
+    
     protected override async Task OnInitializedAsync()
     {
+        _currentUser = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
     }
 
     
@@ -29,6 +36,11 @@
     {
         
       
+    }
+
+    private async Task AddToCart(Product product)
+    {
+       Product addedProduct= await MarketplaceService.AddProductToCartAsync(product,_currentUser.Username);
     }
 
 }

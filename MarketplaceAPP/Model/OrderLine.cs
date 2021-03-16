@@ -17,9 +17,9 @@ namespace MarketplaceAPP.Model
         public decimal TotalPrice { get; set; }
         [JsonPropertyName("cart")]
 
-        public virtual Cart Cart { get; set; }
+        public  Cart Cart { get; set; }
         [JsonPropertyName("product")]
 
-        public virtual Product Product { get; set; }
+        public  Product Product { get; set; }
     }
 }

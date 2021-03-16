@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MarketplaceAPI.Model
@@ -24,11 +25,13 @@ namespace MarketplaceAPI.Model
         public string ThumbnailUrl { get; set; }
         [JsonPropertyName("stock")]
 
-        public int Stock { get; set; } 
-       
-       
+        public int Stock { get; set; }
+
         [JsonPropertyName("category")]
        public Category Category { get; set; } 
+       [JsonPropertyName("categoryId")]
+       public int CategoryId { get; set; } 
+       
         
         // public virtual ICollection<OrderLine> OrderLines { get; set; }
     }

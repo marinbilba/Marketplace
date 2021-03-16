@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MarketplaceAPP.Model
@@ -11,7 +12,9 @@ namespace MarketplaceAPP.Model
         [JsonPropertyName("name")]
 
         public string Name { get; set; }
-       
+        [JsonPropertyName("products")]
+        
+        public ICollection<Product> Products { get; set; } 
 
     }
 }

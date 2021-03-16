@@ -1,0 +1,76 @@
+﻿@page "/"
+@page "/login"
+@using MarketplaceAPP.Data
+@using MarketplaceAPP.Pages.LoginView
+@using MarketplaceAPP.Authentication
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMarketplaceService MarketplaceService;
+@layout LoginLayout
+@inject NavigationManager NavigationManager
+
+<link rel="stylesheet" href="css/Login/style.css">
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="login-page">
+            <div class="form">
+                <form class="login-form">
+                    <input type="text" placeholder="username" @bind-value="_username"/>
+                    <input type="password" placeholder="password" @bind-value="_password"/>
+
+                    @if (!_loadingShow)
+                    {
+                        <button type="button" @onclick="@SubmitLogin">Login</button>
+                    }
+                    else
+                    {
+                        <button type="button" @onclick="@SubmitLogin">
+                            <div id="spinner">
+                                <Chase Color="#4a6ac8"Size="20px"/>
+                            </div>
+
+                            Login
+                        </button>
+                    }
+                    <div style="color:red">@_errorMessage</div>
+
+                </form>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string _username;
+    private string _password;
+    private string _errorMessage;
+
+    private bool _loadingShow = false;
+
+    private async Task SubmitLogin()
+    {
+        _errorMessage = "";
+        try
+        {
+            ValidateUsernameAndPasswordField();
+            _loadingShow = true;
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(_username, _password);
+            _username = "";
+            _password = "";
+            NavigationManager.NavigateTo("/index", true);
+        }
+        catch (Exception e)
+        {
+            _loadingShow = false;
+            _errorMessage = e.Message;
+            Console.WriteLine(e);
+        }
+    }
+
+    private void ValidateUsernameAndPasswordField()
+    {
+        if (string.IsNullOrEmpty(_username)) throw new Exception("Enter username");
+        if (string.IsNullOrEmpty(_password)) throw new Exception("Enter password");
+    }
+
+}

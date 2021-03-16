@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MarketplaceAPI.Model
@@ -7,6 +8,7 @@ namespace MarketplaceAPI.Model
     public class OrderLine
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonPropertyName("id")]
 
         public int Id { get; set; }
@@ -18,9 +20,14 @@ namespace MarketplaceAPI.Model
         public decimal TotalPrice { get; set; }
         [JsonPropertyName("cart")]
 
-        public virtual Cart Cart { get; set; }
+        public  Cart Cart { get; set; }
+        [JsonPropertyName("cartId")]
+        public  int CartId { get; set; }
         [JsonPropertyName("product")]
 
-        public virtual Product Product { get; set; }
+        public  Product Product { get; set; }
+        [JsonPropertyName("productId")]
+
+        public  int ProductId { get; set; }
     }
 }

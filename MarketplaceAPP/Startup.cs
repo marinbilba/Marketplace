@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MarketplaceAPI.Services.Exceptions;
+using MarketplaceAPP.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MarketplaceAPP.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MarketplaceAPP
 {
@@ -30,6 +33,8 @@ namespace MarketplaceAPP
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<IMarketplaceService,MarketplaceService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

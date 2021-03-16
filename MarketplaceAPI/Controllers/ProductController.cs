@@ -35,5 +35,20 @@ namespace MarketplaceAPI.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        [HttpPost("product_to_cart/{customerUsername}")]
+        public async Task<ActionResult> AddProductToCartAsync([FromBody] Product product,[FromRoute] string customerUsername)
+        {
+            try
+            {
+                await _productService.AddProductToCartAsync(product,customerUsername);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest(ex.Message);
+            }
+           
+        }
     }
 }

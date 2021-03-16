@@ -6,7 +6,8 @@ namespace MarketplaceAPI.Services
 {
     public interface IProductService
     {
-        Task<IList<Product>> GetAllProductsFromCategoryAsync(Category category);
-        
+        Task<IList<Product>> GetAllProductsFromCategoryAsync(int categoryId);
+
+        Task<Product> AddProductToCartAsync(Product product, string customerUsername);
     }
 }
