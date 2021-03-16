@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MarketplaceAPI.Model
+namespace MarketplaceAPP.Model
 {
     public class Category
     {
@@ -12,7 +11,7 @@ namespace MarketplaceAPI.Model
         [JsonPropertyName("name")]
 
         public string Name { get; set; }
-     
+       
 
     }
 }

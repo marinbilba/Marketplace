@@ -29,6 +29,7 @@ namespace MarketplaceAPP
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<IMarketplaceService,MarketplaceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MarketplaceAPI.Model
+namespace MarketplaceAPP.Model
 {
     public class CustomerOrder
     {

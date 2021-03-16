@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MarketplaceAPI.Database;
+using MarketplaceAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +33,9 @@ namespace MarketplaceAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MarketplaceAPI", Version = "v1"});
             });
+            services.AddDbContext<MarketplaceContext>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

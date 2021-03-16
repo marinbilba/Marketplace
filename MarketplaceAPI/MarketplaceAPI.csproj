@@ -20,4 +20,13 @@
       <Folder Include="Migrations" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Services\CategoryService.cs">
+        <DependentUpon>ICategoryService.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Services\ProductService.cs">
+        <DependentUpon>IProductService.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

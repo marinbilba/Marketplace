@@ -1,7 +1,49 @@
 ﻿@page "/"
+@using MarketplaceAPP.Shared.Components
+@using MarketplaceAPP.Data
+@using MarketplaceAPP.Model
+@inject IMarketplaceService MarketplaceService;
+<link rel="stylesheet" type="text/css" href="css/index.css">
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<div class="jumbotron">
+    <h1 class="display-4">Welcom to Marketplace</h1>
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer turpis enim, tempus eget laoreet in, dapibus ultrices sem. </p>
+    <hr class="my-4">
+    <p>Nunc accumsan libero id risus aliquet dapibus.</p>
+    <p class="lead">
+    </p>
+</div>
+<RadzenSelectBar @bind-Value=@inte TValue="int" Multiple="false" Change="@(SelectCategory)"
+                  Data="@_allCategories" TextProperty="Name" ValueProperty="Id"/>
+@* <ProductCard></ProductCard> *@
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code
+{
+    int inte = 0;
+
+    private IList<Category> _allCategories;
+
+    private IList<Product> _productsDisplayed;
+    private IList<Product> _allProductFromCategory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _allCategories = await MarketplaceService.GetAllCategoriesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+           
+        }
+    }
+
+    private void SelectCategory(int args)
+    {
+        var categoryName = _allCategories.Where(p => p.Id == args).ToList();
+        var allProductsFromCategory= MarketplaceService.GetAllProductsFromCategory(categoryName[0].Id);
+    }
+}

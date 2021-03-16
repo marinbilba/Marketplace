@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MarketplaceAPI.Model
+namespace MarketplaceAPP.Model
 {
     public class OrderDetails
     {

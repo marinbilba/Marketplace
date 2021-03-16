@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MarketplaceAPI.Model
+namespace MarketplaceAPP.Model
 {
     public class Product
     {
@@ -25,10 +24,9 @@ namespace MarketplaceAPI.Model
         [JsonPropertyName("stock")]
 
         public int Stock { get; set; } 
-       
-       
         [JsonPropertyName("category")]
-       public Category Category { get; set; } 
+
+        public Category Category { get; set; } 
         
         // public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
