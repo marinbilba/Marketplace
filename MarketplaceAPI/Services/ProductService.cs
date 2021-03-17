@@ -27,6 +27,7 @@ namespace MarketplaceAPI.Services
             var cart = await dbContext.Cart.Include(c=>c.Products).FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
             CheckIfProductAddedToTheCard(cart, product);
             // ensure that only one entity instance with a given key value is attached.
+            
             dbContext.Entry(cart).State = EntityState.Detached;
             cart.Products.Add(product);
             cart.TotalPrice += product.Price;

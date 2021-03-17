@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MarketplaceAPP.Model
@@ -25,7 +26,7 @@ namespace MarketplaceAPP.Model
 
         public int Stock { get; set; }
         [JsonIgnore]
-        public Cart Cart { get; set; }
+        public ICollection<Cart> Cart { get; set; }
         [JsonIgnore]
        public Category Category { get; set; } 
        [JsonPropertyName("categoryId")]

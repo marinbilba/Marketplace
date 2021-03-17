@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MarketplaceAPI.Migrations
 {
-    public partial class InitialCrate3 : Migration
+    public partial class InitialCrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

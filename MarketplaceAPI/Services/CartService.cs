@@ -52,10 +52,14 @@ namespace MarketplaceAPI.Services
 
         private async Task ClearCartAsync(int cartId)
         {
-            var cart = await dbContext.Cart
-                .SingleOrDefaultAsync(x => x.Id == cartId);
-            cart.Products = null;
-            
+            // var cart =  dbContext.Cart
+            //     .FirstAsync(x => x.Id == cartId).Result;
+            var cart=dbContext.Cart.Include(c=>c.Products).FirstAsync(c => c.Id==cartId).Result;
+            foreach (var product in products)
+            {
+                product.Cart = null;
+                dbContext.Product.Update(product);
+            }
             cart.TotalPrice = 0;
             dbContext.Cart.Update(cart);
             dbContext.SaveChanges();

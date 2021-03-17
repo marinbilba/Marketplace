@@ -1,4 +1,5 @@
 ﻿using MarketplaceAPI.Model;
+using MarketplaceAPP.Model;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -14,6 +15,7 @@ namespace MarketplaceAPI.Database
  
         public DbSet<Product> Product { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<ProductCart> ProductCart { get; set; }
         public MarketplaceContext()
         {
         }
