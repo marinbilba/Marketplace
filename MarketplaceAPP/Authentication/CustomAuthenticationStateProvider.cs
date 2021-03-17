@@ -56,7 +56,7 @@ namespace MarketplaceAPP.Authentication
             ClaimsIdentity identity = new ClaimsIdentity();
             try
             {
-              Customer user =  await _marketplaceService.LoginUser(new Customer(username, password));
+              Customer user =  await _marketplaceService.LoginUserAsync(new Customer(username, password));
               identity = SetupClaimsForUser(user);
                 string serialisedData = JsonSerializer.Serialize(user);
                 await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);

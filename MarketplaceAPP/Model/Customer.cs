@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MarketplaceAPP.Model
@@ -9,6 +10,7 @@ namespace MarketplaceAPP.Model
         {
             Username = username;
             Password = password;
+
         }
 
         [Key]
@@ -18,11 +20,11 @@ namespace MarketplaceAPP.Model
         [JsonPropertyName("password")]
 
         public string Password { get; set; }
-        [JsonPropertyName("orderHistory")]
-
-        public OrderHistory OrderHistory { get; set; }
+      
         [JsonPropertyName("cart")]
 
         public Cart Cart { get; set; }
+        [JsonPropertyName("customerOrder")]
+        public ICollection<CustomerOrder> CustomerOrder { get; set; }
     }
 }

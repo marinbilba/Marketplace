@@ -102,6 +102,9 @@ namespace MarketplaceAPI.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("Cart")
+                        .HasColumnType("integer");
+
                     b.Property<int>("CartId")
                         .HasColumnType("integer");
 
@@ -111,17 +114,12 @@ namespace MarketplaceAPI.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("OrderHistoryId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CartId")
                         .IsUnique();
 
                     b.HasIndex("CustomerUsername");
-
-                    b.HasIndex("OrderHistoryId");
 
                     b.ToTable("CustomerOrder");
                 });
@@ -147,58 +145,15 @@ namespace MarketplaceAPI.Migrations
                     b.ToTable("OrderDetails");
                 });
 
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("CustomerUsername")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerUsername")
-                        .IsUnique();
-
-                    b.ToTable("OrderHistory");
-                });
-
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderLine");
-                });
-
             modelBuilder.Entity("MarketplaceAPI.Model.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
@@ -219,6 +174,8 @@ namespace MarketplaceAPI.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.HasIndex("CategoryId");
 
@@ -268,21 +225,15 @@ namespace MarketplaceAPI.Migrations
 
             modelBuilder.Entity("MarketplaceAPI.Model.CustomerOrder", b =>
                 {
-                    b.HasOne("MarketplaceAPI.Model.Cart", "Cart")
+                    b.HasOne("MarketplaceAPI.Model.Cart", null)
                         .WithOne("CustomerOrder")
                         .HasForeignKey("MarketplaceAPI.Model.CustomerOrder", "CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MarketplaceAPI.Model.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerUsername");
-
-                    b.HasOne("MarketplaceAPI.Model.OrderHistory", null)
                         .WithMany("CustomerOrder")
-                        .HasForeignKey("OrderHistoryId");
-
-                    b.Navigation("Cart");
+                        .HasForeignKey("CustomerUsername");
 
                     b.Navigation("Customer");
                 });
@@ -298,41 +249,19 @@ namespace MarketplaceAPI.Migrations
                     b.Navigation("CustomerOrder");
                 });
 
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderHistory", b =>
-                {
-                    b.HasOne("MarketplaceAPI.Model.Customer", "Customer")
-                        .WithOne("OrderHistory")
-                        .HasForeignKey("MarketplaceAPI.Model.OrderHistory", "CustomerUsername");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderLine", b =>
-                {
-                    b.HasOne("MarketplaceAPI.Model.Cart", "Cart")
-                        .WithMany("OrderLines")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MarketplaceAPI.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("MarketplaceAPI.Model.Product", b =>
                 {
+                    b.HasOne("MarketplaceAPI.Model.Cart", "Cart")
+                        .WithMany("Products")
+                        .HasForeignKey("CartId");
+
                     b.HasOne("MarketplaceAPI.Model.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cart");
 
                     b.Navigation("Category");
                 });
@@ -341,7 +270,7 @@ namespace MarketplaceAPI.Migrations
                 {
                     b.Navigation("CustomerOrder");
 
-                    b.Navigation("OrderLines");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("MarketplaceAPI.Model.Category", b =>
@@ -353,17 +282,12 @@ namespace MarketplaceAPI.Migrations
                 {
                     b.Navigation("Cart");
 
-                    b.Navigation("OrderHistory");
+                    b.Navigation("CustomerOrder");
                 });
 
             modelBuilder.Entity("MarketplaceAPI.Model.CustomerOrder", b =>
                 {
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderHistory", b =>
-                {
-                    b.Navigation("CustomerOrder");
                 });
 #pragma warning restore 612, 618
         }

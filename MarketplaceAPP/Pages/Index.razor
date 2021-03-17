@@ -17,25 +17,19 @@
 </div>
 <RadzenSelectBar @bind-Value=@inte TValue="int" Multiple="false" Change="@(SelectCategory)"
                   Data="@_allCategories" TextProperty="Name" ValueProperty="Id"/>
-@if (_productsDisplayed == null)
+@if (_productsDisplayed != null)
 {
-    //todo replace with spinner 
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
+    
     <div class="row">
 
         @foreach (var product in _productsDisplayed)
-         {
-             <ProductCard Product="product"></ProductCard> 
-         }
+        {
+            <ProductCard Product="product"></ProductCard>
+        }
     </div>
 }
-     
- 
+
+
 
 
 
@@ -58,24 +52,22 @@ else
         catch (Exception e)
         {
             Console.WriteLine(e);
-           
         }
     }
 
     private async Task SelectCategory(int args)
     {
-        IList<Product> allProducts=null;
+        IList<Product> allProducts = null;
         var categoryName = _allCategories.Where(p => p.Id == args).ToList();
         try
         {
-  allProducts=await MarketplaceService.GetAllProductsFromCategory(categoryName[0].Id);
+            allProducts = await MarketplaceService.GetAllProductsFromCategoryAsync(categoryName[0].Id);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-          
         }
-       
+
         _productsDisplayed = allProducts;
     }
 }

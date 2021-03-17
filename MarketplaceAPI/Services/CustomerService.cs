@@ -35,7 +35,7 @@ namespace MarketplaceAPI.Services
             var cart = dbContext.Cart.FirstOrDefault(c => c.CustomerUsername.Equals(customerUsername));
             if (cart != null)
             {
-                var fetchedCartWithChildren = dbContext.Cart.Include(c => c.OrderLines).ThenInclude(f=>f.Product).Where(c => c.Id == cart.Id).ToList();
+                var fetchedCartWithChildren = dbContext.Cart.Include(c => c.Products).Where(c => c.Id == cart.Id).ToList();
                 return fetchedCartWithChildren[0];
             }
 

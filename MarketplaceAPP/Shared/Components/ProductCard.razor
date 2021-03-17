@@ -3,6 +3,7 @@
 @using MarketplaceAPP.Authentication
 @inject IMarketplaceService MarketplaceService;
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IToastService toastService
 <link rel="stylesheet" type="text/css" href="css/Components/productCard.css">
 
 <div class="col-md-4">
@@ -25,9 +26,20 @@
         </div>
     </figure>
 </div>
-
+@if (_confirmUpdateNotification)
+{  
+    toastService.ShowSuccess($"{Product.Name} added to your cart", "Success!");
+  
+} 
+@if(_errorItemAlreadyInCart){
+    toastService.ShowError($"{Product.Name} already in your cart");
+}
 
 @code {
+    // ConfirmNotification
+    private bool _confirmUpdateNotification;
+    // ConfirmNotification
+    private bool _errorItemAlreadyInCart;
 
     [Parameter]
     public Product Product { get; set; }
@@ -49,11 +61,14 @@
         try
         {
             await MarketplaceService.AddProductToCartAsync(product, _currentUser.Username);
+            _confirmUpdateNotification = true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+            _errorItemAlreadyInCart = true;
         }
+       
     }
 
 }

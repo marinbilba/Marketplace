@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Toast;
 using MarketplaceAPI.Services.Exceptions;
 using MarketplaceAPP.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +35,7 @@ namespace MarketplaceAPP
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<IMarketplaceService,MarketplaceService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-         
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

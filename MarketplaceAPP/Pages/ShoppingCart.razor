@@ -8,10 +8,10 @@
 
 <RadzenContent Container="main">
     <ChildContent>
-        <RadzenSteps NextText="Next" Change="@((args) => StepChange(args))">
+        <RadzenSteps NextText="Checkout" Change="@((args) => StepChange(args))">
             <Steps>
                 @* First step *@
-                <RadzenStepsItem Text="Review items" Disabled="_firstStepDisable">
+                <RadzenStepsItem Text="Review items" >
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3 class="panel-title">Order Summary</h3>
@@ -28,40 +28,50 @@
                                     <th>
                                         Price (each)
                                     </th>
-                                    <th></th>
+                                    <th>Remove</th>
                                 </tr>
                                 </thead>
-                            @if (customerOrderLines != null)
-                            {
-                                @foreach (var orderLine in customerOrderLines)
+                                @if (customerCart != null)
                                 {
-                                    <tr>
-                                        <td>
-                                            @orderLine.Product.Name
-                                        </td>
-                                        <td>
-                                            @orderLine.Product.Price
-                                        </td>
-                                        <td>
-                                            <a style="cursor:pointer" @onclick="(() => removeFromCart(orderLine.Id))">Remove From Cart</a>
+                                    @foreach (var product in customerCart.Products)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @product.Name
+                                            </td>
+                                            <td>
+                                                @product.Price
+                                            </td>
+                                            <td>
+                                                <a style="cursor:pointer" @onclick="(() => RemoveFromCart(product))">Remove From Cart</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr class="info">
+                                        <td></td>
+                                        <td id="cart-total">
+                                            Total : @customerCart.TotalPrice $
                                         </td>
                                     </tr>
                                 }
-                                <tr class="info">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td id="cart-total">
-                                        Total : @customerCart.TotalPrice $
-                                    </td>
-                                </tr>
-                            }
-                                
+
                             </table>
                         </div>
                     </div>
 
                 </RadzenStepsItem>
+                <RadzenStepsItem Text="Checkout" >
+                   
+                    <RadzenFieldset Text="Purchase Info">
+                       
+                                <RadzenLabel Text="Delivery address"  /><RadzenTextArea @bind-Value=@_orderDetails.DeliveryAddress></RadzenTextArea>
+                                <div class="row offset-7">
+                                    <button type="button" class="btn btn-success" @onclick="(PlaceOrder)">Buy</button>
+                                    </div>
+                    </RadzenFieldset>
+
+                </RadzenStepsItem>
+
             </Steps>
         </RadzenSteps>
     </ChildContent>
@@ -69,9 +79,10 @@
 
 
 @code {
+    public DateTime CardExpDate { get; set; }
     private Customer _currentUser;
-    private IList<OrderLine> customerOrderLines;
     private Cart customerCart;
+    private OrderDetails _orderDetails= new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,20 +95,55 @@
         {
             Console.WriteLine(e);
         }
-       
-        customerOrderLines = (IList<OrderLine>) customerCart.OrderLines;
     }
 
     private void StepChange(int args)
     {
-   
+        switch (args)
+        {
+            case 0:
+                Console.WriteLine("first");
+                break;
+            case 1:
+                Console.WriteLine("Second");
+                break;
+        }
     }
 
     private bool _firstStepDisable;
 
-    private void removeFromCart(int orderLineId)
+    private async Task RemoveFromCart(Product product)
     {
-       
+        try
+        {
+            await MarketplaceService.DeleteProductFromCart(product.Id, customerCart.Id);
+            customerCart.TotalPrice -= product.Price;
+            customerCart.Products.Remove(product);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    private async Task PlaceOrder()
+    {
+        CustomerOrder customerOrder = new CustomerOrder()
+        {
+            CartId = customerCart.Id,
+            CustomerUsername = _currentUser.Username,
+            OrderDetails = _orderDetails
+        };
+        try
+        {
+        await MarketplaceService.PlaceOrderAsync(customerOrder);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
     }
 
 }

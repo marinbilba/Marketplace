@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MarketplaceAPI.Migrations
 {
-    public partial class InitialCrate : Migration
+    public partial class InitialCrate3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,30 +34,6 @@ namespace MarketplaceAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    ThumbnailUrl = table.Column<string>(type: "text", nullable: true),
-                    Stock = table.Column<int>(type: "integer", nullable: false),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Product", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Product_Category_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Category",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cart",
                 columns: table => new
                 {
@@ -78,62 +54,15 @@ namespace MarketplaceAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderHistory",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CustomerUsername = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderHistory_Customer_CustomerUsername",
-                        column: x => x.CustomerUsername,
-                        principalTable: "Customer",
-                        principalColumn: "Username",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderLine",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    CartId = table.Column<int>(type: "integer", nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderLine", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderLine_Cart_CartId",
-                        column: x => x.CartId,
-                        principalTable: "Cart",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderLine_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CustomerOrder",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CartId = table.Column<int>(type: "integer", nullable: false),
+                    Cart = table.Column<int>(type: "integer", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CustomerUsername = table.Column<string>(type: "text", nullable: true),
-                    OrderHistoryId = table.Column<int>(type: "integer", nullable: true)
+                    CustomerUsername = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,12 +79,37 @@ namespace MarketplaceAPI.Migrations
                         principalTable: "Customer",
                         principalColumn: "Username",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    ThumbnailUrl = table.Column<string>(type: "text", nullable: true),
+                    Stock = table.Column<int>(type: "integer", nullable: false),
+                    CartId = table.Column<int>(type: "integer", nullable: true),
+                    CategoryId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomerOrder_OrderHistory_OrderHistoryId",
-                        column: x => x.OrderHistoryId,
-                        principalTable: "OrderHistory",
+                        name: "FK_Product_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Product_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,12 +153,12 @@ namespace MarketplaceAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Product",
-                columns: new[] { "Id", "CategoryId", "Description", "Name", "Price", "Stock", "ThumbnailUrl" },
+                columns: new[] { "Id", "CartId", "CategoryId", "Description", "Name", "Price", "Stock", "ThumbnailUrl" },
                 values: new object[,]
                 {
-                    { 1, 1, "Lorem", "ACER G502", 350m, 19, "https://res.cloudinary.com/dxfq3iotg/image/upload/v1571750967/Ecommerce/ef192a21ec96.jpg" },
-                    { 2, 1, "Lorem", "ACER Predator", 1350m, 5, "https://www.komplett.dk/img/p/1200/1168528.jpg" },
-                    { 3, 2, "Lorem", "Doge", 510m, 500, "https://www.petplanet.co.uk/image/500x500/99_56102_1529569131_bca1d9.jpg" }
+                    { 1, null, 1, "Lorem", "ACER G502", 350m, 19, "https://res.cloudinary.com/dxfq3iotg/image/upload/v1571750967/Ecommerce/ef192a21ec96.jpg" },
+                    { 2, null, 1, "Lorem", "ACER Predator", 1350m, 5, "https://www.komplett.dk/img/p/1200/1168528.jpg" },
+                    { 3, null, 2, "Lorem", "Doge", 510m, 500, "https://www.petplanet.co.uk/image/500x500/99_56102_1529569131_bca1d9.jpg" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -225,31 +179,15 @@ namespace MarketplaceAPI.Migrations
                 column: "CustomerUsername");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrder_OrderHistoryId",
-                table: "CustomerOrder",
-                column: "OrderHistoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_CustomerOrderId",
                 table: "OrderDetails",
                 column: "CustomerOrderId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderHistory_CustomerUsername",
-                table: "OrderHistory",
-                column: "CustomerUsername",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderLine_CartId",
-                table: "OrderLine",
+                name: "IX_Product_CartId",
+                table: "Product",
                 column: "CartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderLine_ProductId",
-                table: "OrderLine",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryId",
@@ -263,22 +201,16 @@ namespace MarketplaceAPI.Migrations
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "OrderLine");
+                name: "Product");
 
             migrationBuilder.DropTable(
                 name: "CustomerOrder");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Cart");
-
-            migrationBuilder.DropTable(
-                name: "OrderHistory");
-
-            migrationBuilder.DropTable(
-                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Customer");

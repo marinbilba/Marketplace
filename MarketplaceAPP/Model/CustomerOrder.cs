@@ -13,18 +13,21 @@ namespace MarketplaceAPP.Model
         [JsonPropertyName("cartId")]
 
         public int CartId { get; set; }
+        [JsonIgnore]
+
+        public int Cart { get; set; }
         [JsonPropertyName("dateTime")]
 
         public DateTime DateTime { get; set; }
-        [JsonPropertyName("cart")]
-
-        public Cart Cart { get; set; }
         [JsonPropertyName("orderDetails")]
-
         public  OrderDetails OrderDetails { get; set; }
-        [JsonPropertyName("customer")]
+        
+        [JsonIgnore]
 
-        public  Customer Customer{ get; set; }
+        public Customer Customer{ get; set; }
+        [JsonPropertyName("customerUsername")]
+
+        public string CustomerUsername{ get; set; }
         
        
         

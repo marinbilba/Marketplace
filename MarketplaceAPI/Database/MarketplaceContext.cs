@@ -11,8 +11,7 @@ namespace MarketplaceAPI.Database
         public DbSet<Category> Category { get; set; }
       public DbSet<CustomerOrder> CustomerOrder { get; set; }
         public DbSet<OrderDetails> OrderDetails { get; set; }
-        public DbSet<OrderHistory> OrderHistory { get; set; }
-        public DbSet<OrderLine> OrderLine { get; set; }
+ 
         public DbSet<Product> Product { get; set; }
         public DbSet<Cart> Cart { get; set; }
         public MarketplaceContext()
@@ -38,26 +37,7 @@ namespace MarketplaceAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CustomerOrder>()
-                .HasOne(b => b.OrderDetails)
-                .WithOne(i => i.CustomerOrder)
-                .HasForeignKey<OrderDetails>(b => b.CustomerOrderId);
-
-            modelBuilder.Entity<Customer>()
-                .HasOne(b => b.Cart)
-                .WithOne(i => i.Customer)
-                .HasForeignKey<Cart>(b => b.CustomerUsername);
-
-            modelBuilder.Entity<Customer>()
-                .HasOne(b => b.OrderHistory)
-                .WithOne(i => i.Customer)
-                .HasForeignKey<OrderHistory>(b => b.CustomerUsername);
-            
-            modelBuilder.Entity<OrderLine>()
-                .Property(f => f.Id)
-                .ValueGeneratedOnAdd();
-
-            
+     
             // Populating the tables
             modelBuilder.Entity<Customer>().HasData(new Customer() {Username = "test", Password = "123"});
             modelBuilder.Entity<Cart>().HasData(new Cart(){Id=1,CustomerUsername = "test"});

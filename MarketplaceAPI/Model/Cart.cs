@@ -14,9 +14,13 @@ namespace MarketplaceAPI.Model
         public string CustomerUsername { get; set; }
         [JsonPropertyName("customer")]
         public Customer Customer { get; set; }
-        [JsonPropertyName("orderLines")]
-        public ICollection<OrderLine> OrderLines { get; set; }
+      
+        [JsonPropertyName("products")]
+
+        public ICollection<Product> Products { get; set; }
+ 
         [JsonPropertyName("customerOrder")]
         public CustomerOrder CustomerOrder { get; set; }
+  
     }
 }

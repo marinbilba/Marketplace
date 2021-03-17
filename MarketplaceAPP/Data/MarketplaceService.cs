@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MarketplaceAPP.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace MarketplaceAPP.Data
@@ -51,7 +52,26 @@ namespace MarketplaceAPP.Data
             }
         }
 
-        public async Task<IList<Product>> GetAllProductsFromCategory(int categoryId)
+        public async Task DeleteProductFromCart(int productId,int cartId)
+        {
+            string sURL = $"{uri}/cart/product/{cartId}/{productId}";
+
+            WebRequest request = WebRequest.Create(sURL);
+            request.Method = "DELETE";
+            try
+            {
+HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+              
+            }
+            
+            
+        }
+
+        public async Task<IList<Product>> GetAllProductsFromCategoryAsync(int categoryId)
         {
             try
             {
@@ -88,7 +108,7 @@ namespace MarketplaceAPP.Data
             }
         }
 
-        public async Task<Customer> LoginUser(Customer customer)
+        public async Task<Customer> LoginUserAsync(Customer customer)
         {
             Customer userDeserialize = null;
             HttpResponseMessage responseMessage;
@@ -133,6 +153,27 @@ namespace MarketplaceAPP.Data
             }
 
             return userDeserialize;
+        }
+
+        public async Task PlaceOrderAsync(CustomerOrder customerOrder)
+        {
+            HttpResponseMessage responseMessage;
+            string orderSerialized = JsonSerializer.Serialize(customerOrder);
+            var content = new StringContent(orderSerialized, Encoding.UTF8, "application/json");
+            // 1. Send POST request
+            try
+            {
+                responseMessage =
+                    await client.PostAsync($"{uri}/cart/placeOrder", content);
+                if (!responseMessage.IsSuccessStatusCode)
+                {
+                    throw new Exception(responseMessage.Content.ReadAsStringAsync().Result);
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                throw new Exception("No connection could be made because the server is not responding");
+            }
         }
     }
 }

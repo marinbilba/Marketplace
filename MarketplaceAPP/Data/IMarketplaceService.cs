@@ -9,10 +9,12 @@ namespace MarketplaceAPP.Data
     public interface IMarketplaceService
     {
         Task<IList<Category>> GetAllCategoriesAsync();
-        Task<IList<Product>> GetAllProductsFromCategory(int categoryId);
+        Task<IList<Product>> GetAllProductsFromCategoryAsync(int categoryId);
         Task AddProductToCartAsync(Product product, string currentUserUsername);
-        Task<Customer> LoginUser(Customer customer);
+        Task<Customer> LoginUserAsync(Customer customer);
         Task<Cart> GetCustomerCartAsync(Customer currentUser);
 
+        Task DeleteProductFromCart(int productId,int cartId);
+        Task PlaceOrderAsync(CustomerOrder customerOrder);
     }
 }

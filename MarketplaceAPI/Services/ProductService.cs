@@ -24,8 +24,11 @@ namespace MarketplaceAPI.Services
 
         public async Task AddProductToCartAsync(Product product, string customerUsername)
         {
-            var cart = await dbContext.Cart.Include(c=>c.OrderLines).FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
-            await CreateOrderLine(cart,product);
+            var cart = await dbContext.Cart.Include(c=>c.Products).FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
+            CheckIfProductAddedToTheCard(cart, product);
+            // ensure that only one entity instance with a given key value is attached.
+            dbContext.Entry(cart).State = EntityState.Detached;
+            cart.Products.Add(product);
             cart.TotalPrice += product.Price;
             
             // Update entity cart with new total price
@@ -36,41 +39,13 @@ namespace MarketplaceAPI.Services
 
         }
 
-        private async Task AddProductToOrderLine(Product product, Cart cart)
+        private void CheckIfProductAddedToTheCard(Cart cart, Product product)
         {
-            if (cart.OrderLines.Count==0)
+            var first = cart.Products.Where(p => p.Id == product.Id).ToList();
+            if(first.Count!=0)
             {
-                 await CreateOrderLine(cart,product);
+                throw new Exception("You have this product in the cart");
             }
-            else
-            {
-                var orderLine = cart.OrderLines.Where(o=>o.Id==product.Id).ToList();
-                if (orderLine.Count != 0)
-                {
-                    throw new Exception("You have this item in the cart");
-                }
-
-               await CreateOrderLine(cart, product);
-            }
-
-        }
-
-        private async Task CreateOrderLine(Cart cart,Product product)
-        {
-
-            var createOrderLine = new OrderLine()
-            {
-                Id = dbContext.OrderLine.ToList().Count+1,
-                CartId = cart.Id,
-                ProductId = product.Id
-                
-                
-            };
-            dbContext.OrderLine.Add(createOrderLine);
-
-            dbContext.Entry(createOrderLine).State = EntityState.Added;
-             dbContext.SaveChanges();
-           
         }
     }
 }

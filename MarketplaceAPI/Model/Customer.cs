@@ -14,11 +14,11 @@ namespace MarketplaceAPI.Model
         [JsonPropertyName("password")]
 
         public string Password { get; set; }
-        [JsonPropertyName("orderHistory")]
-
-        public OrderHistory OrderHistory { get; set; }
+      
         [JsonPropertyName("cart")]
 
         public Cart Cart { get; set; }
+        [JsonPropertyName("customerOrder")]
+        public ICollection<CustomerOrder> CustomerOrder { get; set; }
     }
 }
