@@ -22,47 +22,55 @@ namespace MarketplaceAPI.Services
             return await dbContext.Product.Where(p => p.Category.Id == categoryId).ToListAsync();
         }
 
-        public async Task<Product> AddProductToCartAsync(Product product, string customerUsername)
+        public async Task AddProductToCartAsync(Product product, string customerUsername)
         {
-            var cart = await dbContext.Cart.FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
-            var orderLine = await AddProductToOrderLine(product, cart);
-            cart.OrderLines.Add(orderLine);
-            // Update entity Product data sheet byte array
+            var cart = await dbContext.Cart.Include(c=>c.OrderLines).FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
+            await CreateOrderLine(cart,product);
+            cart.TotalPrice += product.Price;
+            
+            // Update entity cart with new total price
             dbContext.Cart.Update(cart);
 
             // Save changes in database
-            await dbContext.SaveChangesAsync();
-            return null;
+            dbContext.SaveChanges();
+
         }
 
-        private async Task<OrderLine> AddProductToOrderLine(Product product, Cart cart)
+        private async Task AddProductToOrderLine(Product product, Cart cart)
         {
-            if (cart.OrderLines == null)
+            if (cart.OrderLines.Count==0)
             {
-                return await CreateOrderLine(product);
+                 await CreateOrderLine(cart,product);
+            }
+            else
+            {
+                var orderLine = cart.OrderLines.Where(o=>o.Id==product.Id).ToList();
+                if (orderLine.Count != 0)
+                {
+                    throw new Exception("You have this item in the cart");
+                }
+
+               await CreateOrderLine(cart, product);
             }
 
-            var orderLine = cart.OrderLines.First(o => o.Product.Equals(product));
-            if (orderLine != null)
-            {
-                throw new Exception("You have this item in the cart");
-            }
-
-            return await CreateOrderLine(product);
         }
 
-        private async Task<OrderLine> CreateOrderLine(Product product)
+        private async Task CreateOrderLine(Cart cart,Product product)
         {
-            
+
             var createOrderLine = new OrderLine()
-            {Id =dbContext.OrderLine.LastAsync().Id+1,
-                Product = product
+            {
+                Id = dbContext.OrderLine.ToList().Count+1,
+                CartId = cart.Id,
+                ProductId = product.Id
+                
+                
             };
-            await dbContext.OrderLine.AddAsync(createOrderLine);
+            dbContext.OrderLine.Add(createOrderLine);
 
             dbContext.Entry(createOrderLine).State = EntityState.Added;
-            await dbContext.SaveChangesAsync();
-            return createOrderLine;
+             dbContext.SaveChanges();
+           
         }
     }
 }

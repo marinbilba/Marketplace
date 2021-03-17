@@ -12,14 +12,13 @@ namespace MarketplaceAPI.Model
         [JsonPropertyName("id")]
 
         public int Id { get; set; }
-        [JsonPropertyName("quantity")]
 
-        public int Quantity { get; set; }
+        [JsonPropertyName("quantity")] public int Quantity { get; set; } = 1;
         [JsonPropertyName("totalPrice")]
 
         public decimal TotalPrice { get; set; }
-        [JsonPropertyName("cart")]
-
+        
+       [JsonIgnore]
         public  Cart Cart { get; set; }
         [JsonPropertyName("cartId")]
         public  int CartId { get; set; }

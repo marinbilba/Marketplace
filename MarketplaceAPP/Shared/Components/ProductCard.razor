@@ -5,42 +5,55 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 <link rel="stylesheet" type="text/css" href="css/Components/productCard.css">
 
-  <div class="col-md-4">
-            <figure class="card card-product-grid card-lg"> <a @onclick="(() => ViewProduct(Product))" href="#" class="img-wrap" data-abc="true"><img src="@Product.ThumbnailUrl"></a>
-                <figcaption class="info-wrap">
-                    <div class="row">
-                        <div class="col-md-8"> <a href="#" class="title" data-abc="true"></a>@Product.Name</div>
-                    </div>
-                </figcaption>
-                <div class="bottom-wrap"> <a @onclick="(() => AddToCart(Product))"href="#" class="btn btn-primary float-right" data-abc="true"> Add to cart</a>
-                    <div class="price-wrap"> <span class="price h5">@Product.Price</span> <br> <small class="text-success">Free shipping</small> </div>
+<div class="col-md-4">
+    <figure class="card card-product-grid card-lg" >
+        <a style="cursor:pointer" @onclick="(() => ViewProduct(Product))" class="img-wrap" data-abc="true">
+            <img src="@Product.ThumbnailUrl">
+        </a>
+        <figcaption class="info-wrap">
+            <div class="row">
+                <div class="col-md-8">
+                    <a href="#" class="title" data-abc="true"></a>@Product.Name
                 </div>
-            </figure>
+            </div>
+        </figcaption>
+        <div class="bottom-wrap">
+            <a style="cursor:pointer" @onclick="(() => AddToCart(Product))" class="btn btn-primary float-right" data-abc="true"> Add to cart</a>
+            <div class="price-wrap">
+                <span class="price h5">@Product.Price</span> <br> <small class="text-success">Free shipping</small>
+            </div>
         </div>
-    
- 
+    </figure>
+</div>
+
+
 @code {
+
     [Parameter]
     public Product Product { get; set; }
-    
+
     private Customer _currentUser;
-    
+
     protected override async Task OnInitializedAsync()
     {
         _currentUser = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
     }
 
-    
 
     private void ViewProduct(Product product)
     {
-        
-      
     }
 
     private async Task AddToCart(Product product)
     {
-       Product addedProduct= await MarketplaceService.AddProductToCartAsync(product,_currentUser.Username);
+        try
+        {
+            await MarketplaceService.AddProductToCartAsync(product, _currentUser.Username);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
 }

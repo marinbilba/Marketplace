@@ -8,6 +8,6 @@ namespace MarketplaceAPI.Services
     {
         Task<IList<Product>> GetAllProductsFromCategoryAsync(int categoryId);
 
-        Task<Product> AddProductToCartAsync(Product product, string customerUsername);
+        Task AddProductToCartAsync(Product product, string customerUsername);
     }
 }

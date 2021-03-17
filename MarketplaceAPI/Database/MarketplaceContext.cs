@@ -52,6 +52,10 @@ namespace MarketplaceAPI.Database
                 .HasOne(b => b.OrderHistory)
                 .WithOne(i => i.Customer)
                 .HasForeignKey<OrderHistory>(b => b.CustomerUsername);
+            
+            modelBuilder.Entity<OrderLine>()
+                .Property(f => f.Id)
+                .ValueGeneratedOnAdd();
 
             
             // Populating the tables

@@ -27,7 +27,7 @@ namespace MarketplaceAPI.Model
 
         public int Stock { get; set; }
 
-        [JsonPropertyName("category")]
+        [JsonIgnore]
        public Category Category { get; set; } 
        [JsonPropertyName("categoryId")]
        public int CategoryId { get; set; } 

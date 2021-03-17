@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MarketplaceAPI.Database;
 using MarketplaceAPI.Model;
 using MarketplaceAPI.Services.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceAPI.Services
 {
@@ -28,5 +29,19 @@ namespace MarketplaceAPI.Services
 
             return fetchedUser;
         }
+
+        public async Task<Cart> GetCustomerCartAsync(string customerUsername)
+        {
+            var cart = dbContext.Cart.FirstOrDefault(c => c.CustomerUsername.Equals(customerUsername));
+            if (cart != null)
+            {
+                var fetchedCartWithChildren = dbContext.Cart.Include(c => c.OrderLines).ThenInclude(f=>f.Product).Where(c => c.Id == cart.Id).ToList();
+                return fetchedCartWithChildren[0];
+            }
+
+            throw new Exception("Cart not found");
+        }
+
+      
     }
 }

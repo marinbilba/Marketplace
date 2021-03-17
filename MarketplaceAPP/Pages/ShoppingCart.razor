@@ -1,0 +1,103 @@
+﻿@page "/cart"
+@using MarketplaceAPP.Data
+@using MarketplaceAPP.Authentication
+@using MarketplaceAPP.Model
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMarketplaceService MarketplaceService;
+
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenSteps NextText="Next" Change="@((args) => StepChange(args))">
+            <Steps>
+                @* First step *@
+                <RadzenStepsItem Text="Review items" Disabled="_firstStepDisable">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Order Summary</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="update-message">
+                            </div>
+                            <table class="table table-striped table-hover ">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        Item Name
+                                    </th>
+                                    <th>
+                                        Price (each)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                            @if (customerOrderLines != null)
+                            {
+                                @foreach (var orderLine in customerOrderLines)
+                                {
+                                    <tr>
+                                        <td>
+                                            @orderLine.Product.Name
+                                        </td>
+                                        <td>
+                                            @orderLine.Product.Price
+                                        </td>
+                                        <td>
+                                            <a style="cursor:pointer" @onclick="(() => removeFromCart(orderLine.Id))">Remove From Cart</a>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr class="info">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td id="cart-total">
+                                        Total : @customerCart.TotalPrice $
+                                    </td>
+                                </tr>
+                            }
+                                
+                            </table>
+                        </div>
+                    </div>
+
+                </RadzenStepsItem>
+            </Steps>
+        </RadzenSteps>
+    </ChildContent>
+</RadzenContent>
+
+
+@code {
+    private Customer _currentUser;
+    private IList<OrderLine> customerOrderLines;
+    private Cart customerCart;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
+        try
+        {
+            customerCart = await MarketplaceService.GetCustomerCartAsync(_currentUser);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+       
+        customerOrderLines = (IList<OrderLine>) customerCart.OrderLines;
+    }
+
+    private void StepChange(int args)
+    {
+   
+    }
+
+    private bool _firstStepDisable;
+
+    private void removeFromCart(int orderLineId)
+    {
+       
+    }
+
+}

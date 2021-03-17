@@ -38,5 +38,22 @@ namespace MarketplaceAPI.Controllers
             }
            
         }
+        [HttpGet]
+        [Route("cart/{customerUsername}")]
+        public async Task<ActionResult<Cart>> GetCustomerCartAsync([FromRoute] string customerUsername)
+        {
+            try
+            {
+                var cart = await _customerService.GetCustomerCartAsync(customerUsername);
+              
+                return Ok(cart);
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }

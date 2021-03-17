@@ -6,6 +6,7 @@ namespace MarketplaceAPI.Services
     public interface ICustomerService
     {
         Task<Customer> LoginAsync(Customer user);
+        Task<Cart> GetCustomerCartAsync(string customerUsername);
     }
 
   
