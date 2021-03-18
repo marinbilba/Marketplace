@@ -24,9 +24,6 @@ namespace MarketplaceAPP.Model
         [JsonPropertyName("dateTime")]
 
         public DateTime DateTime { get; set; }
-        [JsonPropertyName("orderDetails")]
-        public  OrderDetails OrderDetails { get; set; }
-        
         [JsonIgnore]
 
         public Customer Customer{ get; set; }

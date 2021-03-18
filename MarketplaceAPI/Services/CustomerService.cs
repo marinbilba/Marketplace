@@ -50,7 +50,7 @@ namespace MarketplaceAPI.Services
 
         public async Task<IList<CustomerOrder>> GetCustomerOrderHistoryAsync(string customerUsername)
         {
-            return dbContext.CustomerOrder.Include(c=>c.OrderDetails).Where(c=>c.CustomerUsername.Equals(customerUsername)).ToList();
+            return dbContext.CustomerOrder.Where(c=>c.CustomerUsername.Equals(customerUsername)).ToList();
            
         }
     }

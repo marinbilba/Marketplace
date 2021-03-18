@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarketplaceAPI.Migrations
 {
     [DbContext(typeof(MarketplaceContext))]
-    [Migration("20210318095756_InitialCrate")]
+    [Migration("20210318123018_InitialCrate")]
     partial class InitialCrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -143,27 +143,6 @@ namespace MarketplaceAPI.Migrations
                     b.ToTable("CustomerOrder");
                 });
 
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("CustomerOrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("DeliveryAddress")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerOrderId")
-                        .IsUnique();
-
-                    b.ToTable("OrderDetails");
-                });
-
             modelBuilder.Entity("MarketplaceAPI.Model.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -278,17 +257,6 @@ namespace MarketplaceAPI.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("MarketplaceAPI.Model.OrderDetails", b =>
-                {
-                    b.HasOne("MarketplaceAPI.Model.CustomerOrder", "CustomerOrder")
-                        .WithOne("OrderDetails")
-                        .HasForeignKey("MarketplaceAPI.Model.OrderDetails", "CustomerOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CustomerOrder");
-                });
-
             modelBuilder.Entity("MarketplaceAPI.Model.Product", b =>
                 {
                     b.HasOne("MarketplaceAPI.Model.Cart", null)
@@ -321,11 +289,6 @@ namespace MarketplaceAPI.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("CustomerOrder");
-                });
-
-            modelBuilder.Entity("MarketplaceAPI.Model.CustomerOrder", b =>
-                {
-                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("MarketplaceAPI.Model.Product", b =>

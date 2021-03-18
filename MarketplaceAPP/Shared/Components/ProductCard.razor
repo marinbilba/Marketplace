@@ -29,10 +29,12 @@
 @if (_confirmUpdateNotification)
 {  
     toastService.ShowSuccess($"{Product.Name} added to your cart", "Success!");
-  
+    _confirmUpdateNotification = false;
+
 } 
 @if(_errorItemAlreadyInCart){
     toastService.ShowError($"{Product.Name} already in your cart");
+    _errorItemAlreadyInCart = false;
 }
 
 @code {
@@ -68,7 +70,8 @@
             Console.WriteLine(e);
             _errorItemAlreadyInCart = true;
         }
-       
+     
+
     }
 
 }

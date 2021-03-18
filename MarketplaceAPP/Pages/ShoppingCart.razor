@@ -64,7 +64,7 @@
                    
                     <RadzenFieldset Text="Purchase Info">
                        
-                                <RadzenLabel Text="Delivery address"  /><RadzenTextArea @bind-Value=@_orderDetails.DeliveryAddress></RadzenTextArea>
+                                <RadzenLabel Text="Delivery address"  /><RadzenTextArea></RadzenTextArea>
                                 <div class="row offset-7">
                                     <button type="button" class="btn btn-success" @onclick="(PlaceOrder)">Buy</button>
                                     </div>
@@ -82,7 +82,7 @@
     public DateTime CardExpDate { get; set; }
     private Customer _currentUser;
     private Cart customerCart;
-    private OrderDetails _orderDetails= new();
+   
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,7 +123,7 @@
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+           
         }
     }
 
@@ -133,7 +133,6 @@
         {
             CartId = customerCart.Id,
             CustomerUsername = _currentUser.Username,
-            OrderDetails = _orderDetails
         };
         try
         {

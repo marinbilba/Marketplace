@@ -114,26 +114,6 @@ namespace MarketplaceAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DeliveryAddress = table.Column<string>(type: "text", nullable: true),
-                    CustomerOrderId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderDetails_CustomerOrder_CustomerOrderId",
-                        column: x => x.CustomerOrderId,
-                        principalTable: "CustomerOrder",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CartProducts",
                 columns: table => new
                 {
@@ -208,12 +188,6 @@ namespace MarketplaceAPI.Migrations
                 column: "CustomerUsername");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_CustomerOrderId",
-                table: "OrderDetails",
-                column: "CustomerOrderId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Product_CartId",
                 table: "Product",
                 column: "CartId");
@@ -230,19 +204,16 @@ namespace MarketplaceAPI.Migrations
                 name: "CartProducts");
 
             migrationBuilder.DropTable(
-                name: "OrderDetails");
+                name: "CustomerOrder");
 
             migrationBuilder.DropTable(
                 name: "Product");
 
             migrationBuilder.DropTable(
-                name: "CustomerOrder");
+                name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Category");
-
-            migrationBuilder.DropTable(
-                name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Customer");

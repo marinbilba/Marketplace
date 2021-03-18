@@ -16,9 +16,7 @@
         <thead>
         <tr>
             <th>Transaction ID</th>
-            <th>Number of products</th>
             <th>Date time</th>
-            <th>Delivery Address</th>
             <th>Total Price</th>
         </tr>
         </thead>
@@ -27,13 +25,7 @@
         {
             <tr>
                 <td>@customerOrder.Id</td>
-                <td>@customerOrder.NumberOfProducts</td>
                 <td>@customerOrder.DateTime</td>
-                @if (customerOrder.OrderDetails != null)
-                {
-                    <td>@customerOrder.OrderDetails.DeliveryAddress</td>
-                }
-
                 <td>@customerOrder.TotalPrice</td>
             </tr>
         }
@@ -50,6 +42,4 @@
         _currentUser = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
         _customerOrders = await MarketplaceService.GetCustomerOrderHistory(_currentUser.Username);
     }
-
-
 }

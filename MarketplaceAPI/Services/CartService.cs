@@ -42,8 +42,6 @@ namespace MarketplaceAPI.Services
 
             order.DateTime = DateTime.Now;
             order.TotalPrice = cart.TotalPrice;
-            order.NumberOfProducts = cart.CartProduct.Where(a=>a.CartId==cart.Id).ToList().Count;
-
             dbContext.Entry(order).State = EntityState.Added;
             dbContext.CustomerOrder.Add(order);
             // dbContext.Customer.Update(customer);

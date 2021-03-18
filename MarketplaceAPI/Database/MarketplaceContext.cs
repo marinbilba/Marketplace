@@ -10,9 +10,7 @@ namespace MarketplaceAPI.Database
         public  DbSet<Customer> Customer { get; set; }
         public DbSet<Category> Category { get; set; }
       public DbSet<CustomerOrder> CustomerOrder { get; set; }
-        public DbSet<OrderDetails> OrderDetails { get; set; }
- 
-        public DbSet<Product> Product { get; set; }
+      public DbSet<Product> Product { get; set; }
         public DbSet<Cart> Cart { get; set; }
         public DbSet<CartProduct> CartProducts { get; set; }
       
