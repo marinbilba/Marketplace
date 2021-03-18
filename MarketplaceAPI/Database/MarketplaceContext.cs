@@ -29,7 +29,7 @@ namespace MarketplaceAPI.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Database=Marketplace;Username=postgres;Password=****");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=Marketplace;Username=postgres;Password=admin");
             }
 
             optionsBuilder.EnableSensitiveDataLogging();
