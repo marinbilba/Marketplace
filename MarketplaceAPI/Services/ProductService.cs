@@ -24,29 +24,29 @@ namespace MarketplaceAPI.Services
 
         public async Task AddProductToCartAsync(Product product, string customerUsername)
         {
-            var cart = await dbContext.Cart.Include(c=>c.Products).FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
-            CheckIfProductAddedToTheCard(cart, product);
+            var cart = await dbContext.Cart.FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
+            var fetchedProduct = await dbContext.Product.FirstAsync(x => x.Id==product.Id);
+
+            //CheckIfProductAddedToTheCard(cart, product);
             // ensure that only one entity instance with a given key value is attached.
             
-            dbContext.Entry(cart).State = EntityState.Detached;
-            cart.Products.Add(product);
+         //   dbContext.Entry(cart).State = EntityState.Detached;
+     //       cart.Products.Add(product);
             cart.TotalPrice += product.Price;
+            CartProduct cp = new CartProduct()
+            {
+                Cart = cart,
+                Product = fetchedProduct
+            };
+          
             
             // Update entity cart with new total price
-            dbContext.Cart.Update(cart);
+            dbContext.Set<CartProduct>().Add(cp);
 
             // Save changes in database
             dbContext.SaveChanges();
 
         }
-
-        private void CheckIfProductAddedToTheCard(Cart cart, Product product)
-        {
-            var first = cart.Products.Where(p => p.Id == product.Id).ToList();
-            if(first.Count!=0)
-            {
-                throw new Exception("You have this product in the cart");
-            }
-        }
+        
     }
 }

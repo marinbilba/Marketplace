@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MarketplaceAPI.Model;
 
 namespace MarketplaceAPI.Services
@@ -7,6 +8,8 @@ namespace MarketplaceAPI.Services
     {
         Task<Customer> LoginAsync(Customer user);
         Task<Cart> GetCustomerCartAsync(string customerUsername);
+        
+        Task<IList<CustomerOrder>> GetCustomerOrderHistoryAsync(string customerUsername);
     }
 
   

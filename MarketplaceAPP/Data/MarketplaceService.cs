@@ -175,5 +175,20 @@ HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
                 throw new Exception("No connection could be made because the server is not responding");
             }
         }
+
+        public async Task<IList<CustomerOrder>> GetCustomerOrderHistory(string currentUserUsername)
+        {
+            try
+            {
+                var message = await client.GetStringAsync($"{uri}/customer/order_history/{currentUserUsername}");
+                var result = JsonSerializer.Deserialize<List<CustomerOrder>>(message);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

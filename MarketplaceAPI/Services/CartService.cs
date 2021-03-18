@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MarketplaceAPI.Database;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceAPI.Services
 {
-    public class CartService :ICartService
+    public class CartService : ICartService
     {
         private MarketplaceContext dbContext { get; }
 
@@ -17,22 +18,17 @@ namespace MarketplaceAPI.Services
         }
 
 
-        public void DeleteProduct(int cartId,int productId)
+        public void DeleteProduct(int cartId, int productId)
         {
-            Cart cart=dbContext.Cart.Include(p=>p.Products).FirstAsync(c => c.Id == cartId).Result;
-            if (cart == null)
-            {
-                throw new Exception("Cart not found");
-            }
-            var product = cart.Products.First(p => p.Id == productId);
-            if (product == null)
-            {
-                throw new Exception("Product not found");
-            }
-
+            Cart cart = dbContext.Cart.FirstAsync(c => c.Id == cartId).Result;
+            Product product = dbContext.Product.FirstAsync(p => p.Id == productId).Result;
+            CartProduct cartProduct = dbContext.Cart.
+                Where(s => s.Id == cartId)
+                .SelectMany(cp => cp.CartProduct).
+                First(studentCourse => studentCourse.ProductId==productId);
+  
             cart.TotalPrice -= product.Price;
-            cart.Products.Remove(product);
-            
+            dbContext.Remove(cartProduct);
             // Update entity cart 
             dbContext.Cart.Update(cart);
 
@@ -42,10 +38,15 @@ namespace MarketplaceAPI.Services
 
         public async void PlaceOrder(CustomerOrder order)
         {
-            var customer = dbContext.Customer.Include(c=>c.CustomerOrder).FirstAsync(c=>c.Username.Equals(order.CustomerUsername)).Result;
-           customer.CustomerOrder.Add(order);
-            
-           dbContext.Customer.Update(customer);
+            var cart = dbContext.Cart.First(c => c.Id == order.CartId);
+
+            order.DateTime = DateTime.Now;
+            order.TotalPrice = cart.TotalPrice;
+            order.NumberOfProducts = cart.CartProduct.Where(a=>a.CartId==cart.Id).ToList().Count;
+
+            dbContext.Entry(order).State = EntityState.Added;
+            dbContext.CustomerOrder.Add(order);
+            // dbContext.Customer.Update(customer);
             dbContext.SaveChanges();
             await ClearCartAsync(order.CartId);
         }
@@ -54,15 +55,25 @@ namespace MarketplaceAPI.Services
         {
             // var cart =  dbContext.Cart
             //     .FirstAsync(x => x.Id == cartId).Result;
-            var cart=dbContext.Cart.Include(c=>c.Products).FirstAsync(c => c.Id==cartId).Result;
-            foreach (var product in products)
+            Cart cart = dbContext.Cart.Include(p => p.CartProduct).ThenInclude(pr=>pr.Product).FirstAsync(s => s.Id == cartId).Result;
+
+            foreach (var cartProduct in cart.CartProduct.Where(a=>a.CartId==cart.Id))
             {
-                product.Cart = null;
-                dbContext.Product.Update(product);
+                dbContext.CartProducts.Remove(cartProduct);
+                // CartProduct fetchedCartProducts = dbContext.Cart.Where(s => s.Id == cartId)
+                //     .SelectMany(c => c.CartProduct).First(p => p.ProductId == cartProduct.ProductId);
+                // dbContext.Remove(fetchedCartProducts);
+                try
+                {
+                    cart.TotalPrice -= cartProduct.Product.Price;
+                    dbContext.Cart.Update(cart);
+                     dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-            cart.TotalPrice = 0;
-            dbContext.Cart.Update(cart);
-            dbContext.SaveChanges();
         }
     }
 }

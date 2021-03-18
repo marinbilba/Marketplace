@@ -10,7 +10,6 @@ namespace MarketplaceAPP.Model
         {
             Username = username;
             Password = password;
-
         }
 
         [Key]

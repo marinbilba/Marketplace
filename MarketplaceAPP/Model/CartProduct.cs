@@ -1,12 +1,10 @@
-﻿using MarketplaceAPI.Model;
-
-namespace MarketplaceAPP.Model
+﻿namespace MarketplaceAPP.Model
 {
-    public class ProductCart
+    public class CartProduct
     {
         public int ProductId { get; set; }
         public Product Product { get; set; }
-        public string CardId { get; set; }
+        public string CartId { get; set; }
         public Cart Cart { get; set; }
     }
 }

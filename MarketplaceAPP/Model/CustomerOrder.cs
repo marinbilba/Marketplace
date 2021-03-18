@@ -15,7 +15,12 @@ namespace MarketplaceAPP.Model
         public int CartId { get; set; }
         [JsonIgnore]
 
-        public int Cart { get; set; }
+        public Cart Cart { get; set; }
+        [JsonPropertyName("totalPrice")]
+        public decimal TotalPrice { get; set; }
+        [JsonPropertyName("numberOfProducts")]
+        public int NumberOfProducts { get; set; }
+        
         [JsonPropertyName("dateTime")]
 
         public DateTime DateTime { get; set; }
@@ -28,6 +33,7 @@ namespace MarketplaceAPP.Model
         [JsonPropertyName("customerUsername")]
 
         public string CustomerUsername{ get; set; }
+
         
        
         

@@ -26,7 +26,7 @@ namespace MarketplaceAPP.Model
 
         public int Stock { get; set; }
         [JsonIgnore]
-        public ICollection<Cart> Cart { get; set; }
+        public ICollection<CartProduct> CartProduct { get; set; }
         [JsonIgnore]
        public Category Category { get; set; } 
        [JsonPropertyName("categoryId")]

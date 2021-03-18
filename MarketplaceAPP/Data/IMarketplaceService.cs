@@ -16,5 +16,6 @@ namespace MarketplaceAPP.Data
 
         Task DeleteProductFromCart(int productId,int cartId);
         Task PlaceOrderAsync(CustomerOrder customerOrder);
+        Task<IList<CustomerOrder>> GetCustomerOrderHistory(string currentUserUsername);
     }
 }

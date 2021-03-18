@@ -1,10 +1,55 @@
 ﻿@page "/ordersHistory"
 @using MarketplaceAPP.Data
+@using MarketplaceAPI.Model
+@using MarketplaceAPP.Authentication
+@using Customer = MarketplaceAPP.Model.Customer
+@using CustomerOrder = MarketplaceAPP.Model.CustomerOrder
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IMarketplaceService MarketplaceService;
 
+<link rel="stylesheet" type="text/css" href="css/orderHistory.css">
 
+
+@if (_customerOrders != null)
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Number of products</th>
+            <th>Date time</th>
+            <th>Delivery Address</th>
+            <th>Total Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customerOrder in _customerOrders)
+        {
+            <tr>
+                <td>@customerOrder.Id</td>
+                <td>@customerOrder.NumberOfProducts</td>
+                <td>@customerOrder.DateTime</td>
+                @if (customerOrder.OrderDetails != null)
+                {
+                    <td>@customerOrder.OrderDetails.DeliveryAddress</td>
+                }
+
+                <td>@customerOrder.TotalPrice</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
 @code {
+    private IList<CustomerOrder> _customerOrders;
+    private Customer _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
+        _customerOrders = await MarketplaceService.GetCustomerOrderHistory(_currentUser.Username);
+    }
 
 
 }

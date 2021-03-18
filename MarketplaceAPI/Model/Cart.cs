@@ -20,7 +20,7 @@ namespace MarketplaceAPI.Model
         public ICollection<Product> Products { get; set; }
  
         [JsonPropertyName("customerOrder")]
-        public CustomerOrder CustomerOrder { get; set; }
+        public ICollection<CartProduct> CartProduct { get; set; }
   
     }
 }

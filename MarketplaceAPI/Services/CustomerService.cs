@@ -35,13 +35,23 @@ namespace MarketplaceAPI.Services
             var cart = dbContext.Cart.FirstOrDefault(c => c.CustomerUsername.Equals(customerUsername));
             if (cart != null)
             {
-                var fetchedCartWithChildren = dbContext.Cart.Include(c => c.Products).Where(c => c.Id == cart.Id).ToList();
-                return fetchedCartWithChildren[0];
+                List<Product> products = await dbContext.Cart
+                    .Where(s => s.CustomerUsername.Equals(customerUsername))
+                    .SelectMany(student => student.CartProduct)
+                    .Select(studentCourse => studentCourse.Product)
+                    .ToListAsync();
+
+                cart.Products = products;
+                return cart;
             }
 
             throw new Exception("Cart not found");
         }
 
-      
+        public async Task<IList<CustomerOrder>> GetCustomerOrderHistoryAsync(string customerUsername)
+        {
+            return dbContext.CustomerOrder.Include(c=>c.OrderDetails).Where(c=>c.CustomerUsername.Equals(customerUsername)).ToList();
+           
+        }
     }
 }

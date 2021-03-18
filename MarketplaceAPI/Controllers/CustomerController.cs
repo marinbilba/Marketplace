@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MarketplaceAPI.Model;
 using MarketplaceAPI.Services;
@@ -55,5 +56,23 @@ namespace MarketplaceAPI.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        [HttpGet]
+        [Route("order_history/{customerUsername}")]
+        public async Task<ActionResult<IList<CustomerOrder>>> GetCustomerOrderHistory([FromRoute] string customerUsername)
+        {
+            try
+            {
+                IList<CustomerOrder> customerOrders = await _customerService.GetCustomerOrderHistoryAsync(customerUsername);
+              
+                return Ok(customerOrders);
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, e.Message);
+            }
+        }
+       
     }
 }

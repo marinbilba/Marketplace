@@ -60,7 +60,8 @@ namespace MarketplaceAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CartId = table.Column<int>(type: "integer", nullable: false),
-                    Cart = table.Column<int>(type: "integer", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    NumberOfProducts = table.Column<int>(type: "integer", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CustomerUsername = table.Column<string>(type: "text", nullable: true)
                 },
@@ -92,8 +93,8 @@ namespace MarketplaceAPI.Migrations
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "text", nullable: true),
                     Stock = table.Column<int>(type: "integer", nullable: false),
-                    CartId = table.Column<int>(type: "integer", nullable: true),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false)
+                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    CartId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,6 +129,30 @@ namespace MarketplaceAPI.Migrations
                         name: "FK_OrderDetails_CustomerOrder_CustomerOrderId",
                         column: x => x.CustomerOrderId,
                         principalTable: "CustomerOrder",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartProducts",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    CartId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartProducts", x => new { x.CartId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_CartProducts_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CartProducts_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -168,10 +193,14 @@ namespace MarketplaceAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartProducts_ProductId",
+                table: "CartProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomerOrder_CartId",
                 table: "CustomerOrder",
-                column: "CartId",
-                unique: true);
+                column: "CartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerOrder_CustomerUsername",
@@ -197,6 +226,9 @@ namespace MarketplaceAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CartProducts");
+
             migrationBuilder.DropTable(
                 name: "OrderDetails");
 

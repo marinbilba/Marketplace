@@ -1,5 +1,4 @@
 ﻿using MarketplaceAPI.Model;
-using MarketplaceAPP.Model;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -15,7 +14,8 @@ namespace MarketplaceAPI.Database
  
         public DbSet<Product> Product { get; set; }
         public DbSet<Cart> Cart { get; set; }
-        public DbSet<ProductCart> ProductCart { get; set; }
+        public DbSet<CartProduct> CartProducts { get; set; }
+      
         public MarketplaceContext()
         {
         }
@@ -39,6 +39,17 @@ namespace MarketplaceAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CartProduct>()
+                .HasKey(bc => new { bc.CartId, bc.ProductId });  
+            modelBuilder.Entity<CartProduct>()
+                .HasOne(bc => bc.Cart)
+                .WithMany(b => b.CartProduct)
+                .HasForeignKey(bc => bc.CartId);  
+           
+            modelBuilder.Entity<CartProduct>()
+                .HasOne(bc => bc.Product)
+                .WithMany(c => c.CartProduct)
+                .HasForeignKey(bc => bc.ProductId);
      
             // Populating the tables
             modelBuilder.Entity<Customer>().HasData(new Customer() {Username = "test", Password = "123"});
