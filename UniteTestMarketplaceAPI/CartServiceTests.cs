@@ -19,7 +19,7 @@ namespace UniteTestMarketplaceAPI
             var options = new DbContextOptionsBuilder<MarketplaceContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             _marketplaceContext = new MarketplaceContext(options);
-            Seed(_marketplaceContext);
+            Seed();
             _sut = new CartService(_marketplaceContext);
         }
 
@@ -107,7 +107,7 @@ namespace UniteTestMarketplaceAPI
             _marketplaceContext.SaveChanges();
         }
 
-        private void Seed(MarketplaceContext context)
+        private void Seed()
         {
             var customer = new Customer() {Username = "test", Password = "123"};
             var cart = new Cart() {Id = 1, CustomerUsername = "test"};
@@ -127,11 +127,11 @@ namespace UniteTestMarketplaceAPI
                 Id = 2, Name = "ACER Predator", Description = "Lorem", Price = 1350,
                 ThumbnailUrl = "https://www.komplett.dk/img/p/1200/1168528.jpg", Stock = 5, CategoryId = 1
             };
-            context.Customer.Add(customer);
-            context.Cart.Add(cart);
-            context.Product.Add(product);
-            context.Product.Add(product2);
-            context.SaveChanges();
+            _marketplaceContext.Customer.Add(customer);
+            _marketplaceContext.Cart.Add(cart);
+            _marketplaceContext.Product.Add(product);
+            _marketplaceContext.Product.Add(product2);
+            _marketplaceContext.SaveChanges();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace UniteTestMarketplaceAPI
             var options = new DbContextOptionsBuilder<MarketplaceContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             _marketplaceContext = new MarketplaceContext(options);
-            Seed(_marketplaceContext);
+            Seed();
             _sut = new CategoryService(_marketplaceContext);
         }
 
@@ -33,12 +33,12 @@ namespace UniteTestMarketplaceAPI
             Assert.Equal(2, _marketplaceContext.Category.Count());
         }
 
-        private void Seed(MarketplaceContext marketplaceContext)
+        private void Seed()
         {
             var category = new Category() {Id = 1, Name = "Computers"};
             var category1 = new Category() {Id = 2, Name = "Toys"};
             _marketplaceContext.Category.Add(category);
-            marketplaceContext.Category.Add(category1);
+            _marketplaceContext.Category.Add(category1);
             _marketplaceContext.SaveChanges();
         }
     }
