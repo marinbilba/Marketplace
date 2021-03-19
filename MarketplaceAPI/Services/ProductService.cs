@@ -36,7 +36,7 @@ namespace MarketplaceAPI.Services
                 throw new ProductNotFound("Product not found");
             }
 
-            //CheckIfProductAddedToTheCard(cart, product);
+            await CheckIfProductAddedToTheCard(cart, fetchedProduct);
             // ensure that only one entity instance with a given key value is attached.
             
          //   dbContext.Entry(cart).State = EntityState.Detached;
@@ -56,6 +56,22 @@ namespace MarketplaceAPI.Services
             dbContext.SaveChanges();
 
         }
-        
+
+        private async Task CheckIfProductAddedToTheCard(Cart cart, Product product)
+        {
+            List<Product> products = await dbContext.Cart
+                .Where(s => s.Id == cart.Id)
+                .SelectMany(st => st.CartProduct)
+                .Select(pr => pr.Product)
+                .ToListAsync();
+            foreach (var productFromCart in products)
+            {
+                if (productFromCart.Id == product.Id)
+                {
+                    throw new ProductAlreadyInCart("Product is already in your cart");
+                }
+            }
+
+        }
     }
 }

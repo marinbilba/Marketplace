@@ -126,9 +126,6 @@ namespace MarketplaceAPI.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("NumberOfProducts")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("numeric");
 

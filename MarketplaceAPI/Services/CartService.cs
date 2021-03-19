@@ -45,19 +45,19 @@ namespace MarketplaceAPI.Services
             dbContext.SaveChanges();
         }
 
-        public async void PlaceOrder(CustomerOrder order)
+        public async Task PlaceOrder(CustomerOrder order)
         {
-            var cart = await dbContext.Cart.FirstOrDefaultAsync(c => c.Id == order.CartId);
+            var cart =  dbContext.Cart.First(c => c.Id == order.CartId);
             if (cart == null)
             {
                 throw new CartNotFound("Cart not found");
             }
 
             order.DateTime = DateTime.Now;
-            order.TotalPrice = cart.TotalPrice;
+            order.TotalPrice = cart.TotalPrice; 
             dbContext.Entry(order).State = EntityState.Added;
-            dbContext.CustomerOrder.Add(order);
-            dbContext.SaveChanges();
+             dbContext.CustomerOrder.Add(order);
+             dbContext.SaveChanges();
             await ClearCartAsync(order.CartId);
         }
 
