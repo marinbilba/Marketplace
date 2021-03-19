@@ -19,23 +19,4 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Services\CategoryService.cs">
-        <DependentUpon>ICategoryService.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Services\ProductService.cs">
-        <DependentUpon>IProductService.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Services\CustomerService.cs">
-        <DependentUpon>ICustomerService.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Services\CartService.cs">
-        <DependentUpon>ICartService.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
 </Project>

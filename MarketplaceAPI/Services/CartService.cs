@@ -44,23 +44,17 @@ namespace MarketplaceAPI.Services
             order.TotalPrice = cart.TotalPrice;
             dbContext.Entry(order).State = EntityState.Added;
             dbContext.CustomerOrder.Add(order);
-            // dbContext.Customer.Update(customer);
             dbContext.SaveChanges();
             await ClearCartAsync(order.CartId);
         }
 
         private async Task ClearCartAsync(int cartId)
         {
-            // var cart =  dbContext.Cart
-            //     .FirstAsync(x => x.Id == cartId).Result;
             Cart cart = dbContext.Cart.Include(p => p.CartProduct).ThenInclude(pr=>pr.Product).FirstAsync(s => s.Id == cartId).Result;
 
             foreach (var cartProduct in cart.CartProduct.Where(a=>a.CartId==cart.Id))
             {
                 dbContext.CartProducts.Remove(cartProduct);
-                // CartProduct fetchedCartProducts = dbContext.Cart.Where(s => s.Id == cartId)
-                //     .SelectMany(c => c.CartProduct).First(p => p.ProductId == cartProduct.ProductId);
-                // dbContext.Remove(fetchedCartProducts);
                 try
                 {
                     cart.TotalPrice -= cartProduct.Product.Price;
