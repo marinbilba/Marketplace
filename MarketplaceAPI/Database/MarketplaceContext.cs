@@ -1,12 +1,15 @@
-﻿using MarketplaceAPI.Model;
+﻿using System.Net.Http;
+using MarketplaceAPI.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
 namespace MarketplaceAPI.Database
 {
     public  class MarketplaceContext : DbContext
-    { 
+    {
+       
         public  DbSet<Customer> Customer { get; set; }
         public DbSet<Category> Category { get; set; }
       public DbSet<CustomerOrder> CustomerOrder { get; set; }
@@ -17,6 +20,8 @@ namespace MarketplaceAPI.Database
         public MarketplaceContext()
         {
         }
+
+        
 
         public MarketplaceContext(DbContextOptions<MarketplaceContext> options)
             : base(options)
@@ -31,8 +36,6 @@ namespace MarketplaceAPI.Database
             {
                 optionsBuilder.UseNpgsql("Host=localhost;Database=Marketplace;Username=postgres;Password=admin");
             }
-
-            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

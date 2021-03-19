@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarketplaceAPI.Migrations
 {
     [DbContext(typeof(MarketplaceContext))]
-    [Migration("20210319104208_InitialCrate")]
+    [Migration("20210319111742_InitialCrate")]
     partial class InitialCrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
