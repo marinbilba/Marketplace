@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarketplaceAPI.Database;
 using MarketplaceAPI.Model;
+using MarketplaceAPI.Services.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceAPI.Services
@@ -20,8 +21,16 @@ namespace MarketplaceAPI.Services
 
         public void DeleteProduct(int cartId, int productId)
         {
-            Cart cart = dbContext.Cart.FirstAsync(c => c.Id == cartId).Result;
-            Product product = dbContext.Product.FirstAsync(p => p.Id == productId).Result;
+            Cart cart = dbContext.Cart.FirstOrDefaultAsync(c => c.Id == cartId).Result;
+            if (cart==null)
+            {
+                throw new CartNotFound("Cart not found");
+            }
+            Product product = dbContext.Product.FirstOrDefaultAsync(p => p.Id == productId).Result;
+            if (product==null)
+            {
+                throw new CartNotFound("Product not found");
+            }
             CartProduct cartProduct = dbContext.Cart.
                 Where(s => s.Id == cartId)
                 .SelectMany(cp => cp.CartProduct).
@@ -38,7 +47,11 @@ namespace MarketplaceAPI.Services
 
         public async void PlaceOrder(CustomerOrder order)
         {
-            var cart = dbContext.Cart.First(c => c.Id == order.CartId);
+            var cart = await dbContext.Cart.FirstOrDefaultAsync(c => c.Id == order.CartId);
+            if (cart == null)
+            {
+                throw new CartNotFound("Cart not found");
+            }
 
             order.DateTime = DateTime.Now;
             order.TotalPrice = cart.TotalPrice;

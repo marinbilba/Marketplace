@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MarketplaceAPI.Database;
 using MarketplaceAPI.Model;
 using MarketplaceAPI.Services;
+using MarketplaceAPI.Services.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace UniteTestMarketplaceAPI
             {
                 _sut.DeleteProduct(15, 1);
             }
-            catch (Exception e)
+            catch (CartNotFound e)
             {
                 callFailed = true;
             }

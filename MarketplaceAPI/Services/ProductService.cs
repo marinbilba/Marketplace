@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarketplaceAPI.Database;
 using MarketplaceAPI.Model;
+using MarketplaceAPI.Services.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketplaceAPI.Services
@@ -24,8 +25,16 @@ namespace MarketplaceAPI.Services
 
         public async Task AddProductToCartAsync(Product product, string customerUsername)
         {
-            var cart = await dbContext.Cart.FirstAsync(x => x.CustomerUsername.Equals(customerUsername));
-            var fetchedProduct = await dbContext.Product.FirstAsync(x => x.Id==product.Id);
+            var cart = await dbContext.Cart.FirstOrDefaultAsync(x => x.CustomerUsername.Equals(customerUsername));
+            if (cart == null)
+            {
+                throw new CartNotFound("Cart not found");
+            }
+            var fetchedProduct = await dbContext.Product.FirstOrDefaultAsync(x => x.Id==product.Id);
+            if (fetchedProduct == null)
+            {
+                throw new ProductNotFound("Product not found");
+            }
 
             //CheckIfProductAddedToTheCard(cart, product);
             // ensure that only one entity instance with a given key value is attached.

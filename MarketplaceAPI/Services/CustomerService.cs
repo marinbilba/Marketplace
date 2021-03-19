@@ -21,7 +21,7 @@ namespace MarketplaceAPI.Services
 
         public async Task<Customer> LoginAsync(Customer user)
         {
-            var fetchedUser =  dbContext.Customer.FirstOrDefault(c => c.Username.Equals(user.Username));
+            var fetchedUser =await  dbContext.Customer.FirstOrDefaultAsync(c => c.Username.Equals(user.Username));
             if (fetchedUser==null||fetchedUser.Password != user.Password)
             {
                 throw new IncorrectUsernameOrPassword("Password or username are incorrect");
@@ -32,7 +32,7 @@ namespace MarketplaceAPI.Services
 
         public async Task<Cart> GetCustomerCartAsync(string customerUsername)
         {
-            var cart = dbContext.Cart.FirstOrDefault(c => c.CustomerUsername.Equals(customerUsername));
+            var cart = await dbContext.Cart.FirstOrDefaultAsync(c => c.CustomerUsername.Equals(customerUsername));
             if (cart != null)
             {
                 List<Product> products = await dbContext.Cart

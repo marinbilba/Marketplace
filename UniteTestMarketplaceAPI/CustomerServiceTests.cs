@@ -22,7 +22,8 @@ namespace UniteTestMarketplaceAPI
             Seed();
             _sut = new CustomerService(_marketplaceContext);
         }
-[Fact]
+
+        [Fact]
         public async Task LoginAsync_ShouldLoginTheUser()
         {
             // Arrange
@@ -32,12 +33,13 @@ namespace UniteTestMarketplaceAPI
                 Password = "123"
             };
             // Act
-           
-                var loginCustomer = _sut.LoginAsync(customerWithValidCredentials);
-                
+
+            var loginCustomer = _sut.LoginAsync(customerWithValidCredentials);
+
             //Assert
             Assert.NotNull(loginCustomer);
         }
+
         [Fact]
         public async Task LoginAsync_ShouldThrowIncorrectUsernameOrPassword()
         {
@@ -57,20 +59,22 @@ namespace UniteTestMarketplaceAPI
             // Act
             try
             {
-             await  _sut.LoginAsync(customerWithIncorrectPassword);
+                await _sut.LoginAsync(customerWithIncorrectPassword);
             }
             catch (IncorrectUsernameOrPassword e)
             {
                 incorrectPassword = true;
             }
+
             try
             {
-              await _sut.LoginAsync(customerWithIncorrectUsername);
+                await _sut.LoginAsync(customerWithIncorrectUsername);
             }
             catch (IncorrectUsernameOrPassword e)
             {
                 incorrectUsername = true;
             }
+
             //Assert
             Assert.True(incorrectPassword);
             Assert.True(incorrectUsername);
